@@ -1,0 +1,18 @@
+AWSTemplateFormatVersion: 2010-09-09
+Description: A table to hold consumer complaint data
+Resources:
+  rDBTable:
+    Type: AWS::DynamoDB::Table
+    Properties:
+      TableName: ConsumerComplaints
+      AttributeDefinitions:
+        -
+          AttributeName: "Complaint ID"
+          AttributeType: "S"
+      KeySchema:
+        -
+          AttributeName: "Complaint ID"
+          KeyType: "HASH"
+      ProvisionedThroughput:
+        ReadCapacityUnits: 5
+        WriteCapacityUnits: 5
