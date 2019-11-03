@@ -16,7 +16,7 @@ Each Company and Product will have the score of its individual complaints added 
     
 ## Steps Taken
 1) The dataset was profiled in a Jupyter Notebook using a Python Pandas Dataframe. By looking at the unique values of
-each field, the idea of how the evaluation function and data model would work began to develop.
+each field, the idea of how the evaluation function and data model would work began to develop. [See Notebook](nb/bank-recommend.ipynb)
 2) Build ETL pipeline using Step Functions, Lambdas and DynamoDb to process the data in a scalable way
 
 ## Next Steps
