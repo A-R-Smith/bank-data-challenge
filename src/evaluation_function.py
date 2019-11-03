@@ -40,8 +40,8 @@ def evalutate_quantitative(row)->int:
     :return: int score
     """
     score = 0
-    score = score + timely_weights[str(row['Timely response?'])]
-    score = score + disputed_weights[str(row['Consumer disputed?'])]
-    score = score + response_weights[str(row['Company response to consumer'])]
+    score = score + timely_weights[str(row['Timely response?']['S'])]
+    score = score + disputed_weights[str(row['Consumer disputed?']['S'])]
+    score = score + response_weights[str(row['Company response to consumer']['S'])]
 
     return score

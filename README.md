@@ -24,3 +24,9 @@ each field, the idea of how the evaluation function and data model would work be
 5) Begin to do deeper analysis of the other fields provided in the data. Use statistical analysis to find correlations between Issues, 
 company responses and consumer disputes. See if there some products and products have common reoccurring issues.
 6) Bring in other datasets to enrich the analysis
+
+## Dependencies Used
+- Jupyter and Pandas for initial data analysis
+- AWS Step Functions, Lambda and DynamoDB for ETL pipeline
+    - Used Serverless.com framework to deploy
+    - Used boto3 library for AWS api calls

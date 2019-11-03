@@ -17,15 +17,74 @@ package:
 # ====================== Functions ====================== #
 functions:
   evaluator-mapper:
-    handler: bank_eval_map.handler
+    handler: consumer_complaint_mapper.handler
     timeout: 900
-  evaluator-reducer:
-    handler: bank_eval_reduce.handler
+    role: rLambdaIAMRole
+  evaluator-processor:
+    handler: consumer_complaint_processor.handler
     timeout: 900
-
-
+    role: rLambdaIAMRole
 
 # ====================== StateMachine ====================== #
 stepFunctions:
   stateMachine:
     name: bank-recommender
+    definition:
+    StartAt: MapComplaints
+    States:
+      MapComplaints:
+        Type: Task
+        Resource:
+          Fn::GettAtt: [evaluator-mapper, Arn]
+        Next: ProessComplaints
+      ProcessComplaints:
+        Type: Map
+        ItemsPath: $.segments
+        MaxConcurrency: 2
+        Iterator:
+          StartAt: ProcessComplaintsWorker
+          States:
+            ProcessComplaintsWorker:
+              Type: Task
+              Resource:
+                Fn::GetAtt: [evaluator-processor, Arn]
+              End: True
+        Next: Done
+      Done:
+        Type: Pass
+        End: True
+  validate: True
+# ====================== IAM ROLE ======================  #
+resources:
+  Resources:
+    rLambdaIAMRole:
+      Type: AWS::IAM::Role
+      Properties:
+        RoleName: ${self:service}-role
+        Path: /
+        AssumeRolePolicyDocument:
+          Version: '2012-10-17'
+          Statement:
+          - Effect: Allow
+            Principal:
+              AWS:
+                - !Sub arn:aws:iam::#{AWS::AccountId}:root
+              Service:
+               - lambda.amazonaws.com
+            Action:
+            - sts:AssumeRole
+        Policies:
+        - PolicyName: ${self:service}-policy
+          PolicyDocument:
+            Version: '2012-10-17'
+            Statement:
+            - Action:
+              - logs:CreateLogGroup
+              - logs:CreateLogStream
+              - logs:PutLogEvents
+              Resource:
+              - !Sub arn:aws:logs:#{AWS::Region}:#{AWS::AccountId}:log-groups:/aws/lambda/*
+            - Action:
+              - dynamodb:*
+              Resource:
+              - !Sub arn:aws:dynamodb:#{AWS::Region}:#{AWS::AccountId}:table/ConsumerComplaints
