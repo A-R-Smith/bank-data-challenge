@@ -67,6 +67,11 @@ instance/
 # Scrapy stuff:
 .scrapy
 
+# Serverless
+.serverless
+.node_modules
+package-lock.json
+
 # Sphinx documentation
 docs/_build/
 

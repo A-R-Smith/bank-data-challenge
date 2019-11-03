@@ -16,11 +16,11 @@ def handler(event, _context):
 
     # get which segment this worker will process
     segment = event["segment"]
-    total_segments = event["total_segment"]
+    total_segments = event["total"]
 
     # initialize clients
     dynamo = boto3.client("dynamodb")
-    paginator = dynamo.get_paginator("scan")    
+    paginator = dynamo.get_paginator("scan")
 
     # initialize batch, this allows for us to bath dynamodb table calls to avoid overloading the table writers
     item_batch = []
