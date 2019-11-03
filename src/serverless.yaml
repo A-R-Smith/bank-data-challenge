@@ -1,0 +1,31 @@
+service: bank-recommend
+
+custom:
+  params: ${file(params.yaml)}
+  pythonRequirements:
+    noDeploy: []
+
+provider:
+  name: aws
+  runtime: python3.6
+  region: ${'us-east-1'}
+
+package:
+  include:
+    - ../src/**
+
+# ====================== Functions ====================== #
+functions:
+  evaluator-mapper:
+    handler: bank_eval_map.handler
+    timeout: 900
+  evaluator-reducer:
+    handler: bank_eval_reduce.handler
+    timeout: 900
+
+
+
+# ====================== StateMachine ====================== #
+stepFunctions:
+  stateMachine:
+    name: bank-recommender
